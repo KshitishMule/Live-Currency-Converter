@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>🌍 Global Currency Converter</title>
+  <style>
+    :root {
+      --bg-gradient-dark: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      --bg-gradient-light: linear-gradient(135deg, #e0eafc, #cfdef3);
+      --text-color-dark: #ffffff;
+      --text-color-light: #000000;
+      --card-bg-dark: rgba(255, 255, 255, 0.05);
+      --card-bg-light: rgba(255, 255, 255, 0.85);
+      --button-dark: #28a745;
+      --button-light: #007bff;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: var(--bg-gradient-dark);
+      color: var(--text-color-dark);
+      transition: all 0.4s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    body.light-mode {
+      background: var(--bg-gradient-light);
+      color: var(--text-color-light);
+    }
+
+    .container {
+      background: var(--card-bg-dark);
+      backdrop-filter: blur(10px);
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+      text-align: center;
+      width: 90%;
+      max-width: 500px;
+      animation: slideIn 0.8s ease;
+    }
+
+    body.light-mode .container {
+      background: var(--card-bg-light);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+    }
+
+    form {
+      margin-top: 20px;
+    }
+
+    select, input, button {
+      padding: 12px 14px;
+      margin: 10px 0;
+      width: 100%;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    select, input {
+      background-color: #ffffff10;
+      color: white;
+    }
+
+    select option {
+      background-color: #2c5364;
+      color: white;
+    }
+
+    body.light-mode select,
+    body.light-mode input {
+      background-color: rgba(255, 255, 255, 0.9);
+      color: black;
+      border: 1px solid #ccc;
+    }
+
+    body.light-mode select option {
+      background-color: white;
+      color: black;
+    }
+
+    button {
+      background-color: var(--button-dark);
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    body.light-mode button {
+      background-color: var(--button-light);
+    }
+
+    button:hover {
+      opacity: 0.9;
+      transform: scale(1.03);
+    }
+
+    .result {
+      margin-top: 25px;
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    .toggle-btn {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #fbc02d, #f9a825);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+      transition: all 0.4s ease;
+      font-size: 1.5rem;
+    }
+
+    .toggle-btn:hover {
+      transform: rotate(20deg) scale(1.1);
+    }
+
+    .toggle-btn span {
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    .moon-icon {
+      opacity: 1;
+    }
+
+    .sun-icon {
+      opacity: 0;
+      position: absolute;
+    }
+
+    body.light-mode .moon-icon {
+      opacity: 0;
+    }
+
+    body.light-mode .sun-icon {
+      opacity: 1;
+      transform: rotate(360deg);
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 30px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Theme Toggle Button -->
+  <button class="toggle-btn" onclick="toggleMode()" title="Toggle Theme">
+    <span class="moon-icon">🌙</span>
+    <span class="sun-icon">☀️</span>
+  </button>
+
+  <div class="container">
+    <h1>🌐 Global Currency Converter</h1>
+
+    <form method="POST">
+      <input type="number" name="amount" step="0.01" placeholder="Enter amount" required />
+
+      <label for="from_currency">From:</label>
+      <select name="from_currency" required>
+        {% for code_name in currencies %}
+          <option value="{{ code_name[0] }}">{{ code_name[0] }} - {{ code_name[1] }}</option>
+        {% endfor %}
+      </select>
+
+      <label for="to_currency">To:</label>
+      <select name="to_currency" required>
+        {% for code_name in currencies %}
+          <option value="{{ code_name[0] }}">{{ code_name[0] }} - {{ code_name[1] }}</option>
+        {% endfor %}
+      </select>
+
+      <button type="submit">💱 Convert</button>
+    </form>
+
+    {% if result %}
+      <div class="result">{{ result }}</div>
+    {% endif %}
+  </div>
+
+  <script>
+    function toggleMode() {
+      document.body.classList.toggle("light-mode");
+    }
+  </script>
+</body>
+</html>
